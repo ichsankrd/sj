@@ -27,10 +27,10 @@ input:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px
 .row .n{margin:0;font-size:inherit;text-align:center}.row .tot{display:block}.row .n small{display:none}
 .no{font-weight:700;font-variant-numeric:tabular-nums}
 .g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:10px}
-.row{display:grid;grid-template-columns:1fr 62px 62px 62px 56px 32px;gap:6px;align-items:end;margin-bottom:6px}
+.row{display:grid;grid-template-columns:1fr 62px 62px 62px 62px 56px 32px;gap:6px;align-items:end;margin-bottom:6px}
 .row .tot{padding:8px 4px;text-align:center;font-weight:600;font-variant-numeric:tabular-nums}
 .row input[type=number]{text-align:center;padding:8px 4px}
-.colh{display:grid;grid-template-columns:1fr 62px 62px 62px 56px 32px;gap:6px;font-size:12px;color:var(--mute);text-align:center}
+.colh{display:grid;grid-template-columns:1fr 62px 62px 62px 62px 56px 32px;gap:6px;font-size:12px;color:var(--mute);text-align:center}
 .colh span:first-child{text-align:left}
 button{font:inherit;cursor:pointer;border-radius:7px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 12px;min-height:38px}
 button.x{padding:0;color:var(--danger);height:38px}
@@ -60,9 +60,9 @@ button.pri{background:var(--acc);color:var(--acc-ink);border-color:var(--acc);fo
   .card{padding:12px}
   .colh{display:none}
   .hd .no{flex:1 1 100%}
-  .row{grid-template-columns:repeat(4,1fr);gap:6px 6px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px dashed var(--line)}
-  .row>input:first-child{grid-column:1/4;grid-row:1}
-  .row>button{grid-column:4;grid-row:1}
+  .row{grid-template-columns:repeat(5,1fr);gap:6px 6px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px dashed var(--line)}
+  .row>input:first-child{grid-column:1/5;grid-row:1}
+  .row>button{grid-column:5;grid-row:1}
   .row .n small{display:block;font-size:12px;color:var(--mute);text-align:center;margin-bottom:2px}
   .row .tot{padding:10px 0}
 }
@@ -135,7 +135,7 @@ var KEY="bast-sppg-v3";
 var BLN=["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
 var HARI=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
 var ROM=["I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII"];
-function S(l,k,b,s){return {sekolah:l,kecil:k,besar:b,sampel:s==null?"":s}}
+function S(l,k,b,s){return {sekolah:l,kecil:k,besar:b,tendik:"",sampel:s==null?"":s}}
 var def={tgl:"2026-10-13",st:6,drv:"",unit:"SPPG Sumenep Kota Sumenep Karangduak",bast:[
  {lembaga:"PAUD Idaman Almunawarah",penerima:"",rows:[S("TK Idaman Al Munawarah","","","")]},
  {lembaga:"PAUD IT Bina Cendekia",penerima:"",rows:[S("TK IT Bina Cendekia","","",""),S("KB Bina Cendekia",36,3)]},
@@ -144,7 +144,7 @@ var def={tgl:"2026-10-13",st:6,drv:"",unit:"SPPG Sumenep Kota Sumenep Karangduak
  {lembaga:"SMA Yayasan Abdullah",penerima:"",rows:[S("SMA Yayasan Abdullah","","","")]}]};
 var st;
 try{st=JSON.parse(localStorage.getItem(KEY))}catch(e){}
-if(!st){try{st=JSON.parse(localStorage.getItem("bast-sppg-v2"));if(st&&st.bast)st.bast.forEach(function(b){b.rows.forEach(function(r){r.kecil="";r.besar="";r.sampel=""})})}catch(e){st=null}}
+if(!st){try{st=JSON.parse(localStorage.getItem("bast-sppg-v2"));if(st&&st.bast)st.bast.forEach(function(b){b.rows.forEach(function(r){r.kecil="";r.besar="";r.tendik="";r.sampel=""})})}catch(e){st=null}}
 if(!st||!st.bast)st=JSON.parse(JSON.stringify(def));
 st.st="";
 function save(){try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}cloudSave()}
@@ -161,34 +161,34 @@ function renderForm(){
     h+='<div class="card"><div class="hd"><span class="no">No. '+nomor(i)+'</span><label class="chk"><input type="checkbox" data-p="'+i+'"'+(b.print===false?'':' checked')+'> Cetak</label><button class="x" data-del="'+i+'" title="Hapus BAST ini" aria-label="Hapus BAST '+(i+1)+'">Hapus</button></div>'+
     '<div class="g2"><div><label>Nama lembaga</label><input data-b="'+i+'" data-k="lembaga" value="'+esc(b.lembaga)+'"></div>'+
     '<div><label>Nama penerima (opsional)</label><input data-b="'+i+'" data-k="penerima" value="'+esc(b.penerima)+'"></div></div>'+
-    '<div class="colh"><span>Sekolah</span><span>Kecil</span><span>Besar</span><span>Sampel</span><span>Total</span><span></span></div>';
+    '<div class="colh"><span>Sekolah</span><span>Kecil</span><span>Besar</span><span>Tendik</span><span>Sampel</span><span>Total</span><span></span></div>';
     b.rows.forEach(function(r,j){
       h+='<div class="row"><input data-b="'+i+'" data-r="'+j+'" data-k="sekolah" value="'+esc(r.sekolah)+'" aria-label="Nama sekolah" placeholder="Nama sekolah">';
-      [["kecil","Kecil"],["besar","Besar"],["sampel","Sampel"]].forEach(function(c){
+      [["kecil","Kecil"],["besar","Besar"],["tendik","Tendik"],["sampel","Sampel"]].forEach(function(c){
         h+='<label class="n"><small>'+c[1]+'</small><input type="number" min="0" inputmode="numeric" data-b="'+i+'" data-r="'+j+'" data-k="'+c[0]+'" value="'+esc(r[c[0]])+'" aria-label="Porsi '+c[1]+'"></label>'});
-      h+='<div class="n"><small>Total</small><span class="tot" id="t'+i+'_'+j+'">'+(num(r.kecil)+num(r.besar)+num(r.sampel))+'</span></div>'+
+      h+='<div class="n"><small>Total</small><span class="tot" id="t'+i+'_'+j+'">'+(num(r.kecil)+num(r.besar)+num(r.tendik)+num(r.sampel))+'</span></div>'+
       '<button class="x" data-rd="'+i+'_'+j+'" aria-label="Hapus baris">×</button></div>';
     });
     h+='<button data-ra="'+i+'">+ Tambah sekolah</button></div>';
   });
   document.getElementById("list").innerHTML=h||'<div class="card">Belum ada BAST. Tekan "+ Tambah BAST".</div>';
 }
-function tot(){var k=0,b=0,s=0,n=0;st.bast.forEach(function(o){o.rows.forEach(function(r){k+=num(r.kecil);b+=num(r.besar);s+=num(r.sampel);n++})});return {k:k,b:b,s:s,t:k+b+s,n:n}}
+function tot(){var k=0,b=0,td=0,s=0,n=0;st.bast.forEach(function(o){o.rows.forEach(function(r){k+=num(r.kecil);b+=num(r.besar);td+=num(r.tendik);s+=num(r.sampel);n++})});return {k:k,b:b,d:td,s:s,t:k+b+td+s,n:n}}
 function rekapTbl(){
-  var h='<table class="rkt"><thead><tr><th>Sekolah</th><th>Kecil</th><th>Besar</th><th>Sampel</th><th>Total</th></tr></thead><tbody>';
+  var h='<table class="rkt"><thead><tr><th>Sekolah</th><th>Siswa Kecil</th><th>Siswa Besar</th><th>Tendik</th><th>Sampel</th><th>Total</th></tr></thead><tbody>';
   st.bast.forEach(function(o,i){
-    var k=0,b=0,s=0;
-    h+='<tr class="g"><td colspan="5">No. '+nomor(i)+' &ndash; '+(esc(o.lembaga)||"(lembaga belum diisi)")+'</td></tr>';
-    o.rows.forEach(function(r){var a=num(r.kecil),c=num(r.besar),d=num(r.sampel);k+=a;b+=c;s+=d;
-      h+='<tr><td>'+(esc(r.sekolah)||"(belum diisi)")+'</td><td>'+show(a)+'</td><td>'+show(c)+'</td><td>'+show(d)+'</td><td>'+show(a+c+d)+'</td></tr>'});
-    if(o.rows.length>1)h+='<tr class="sb"><td>Subtotal</td><td>'+k+'</td><td>'+b+'</td><td>'+s+'</td><td>'+(k+b+s)+'</td></tr>';
+    var k=0,b=0,td=0,s=0;
+    h+='<tr class="g"><td colspan="6">No. '+nomor(i)+' &ndash; '+(esc(o.lembaga)||"(lembaga belum diisi)")+'</td></tr>';
+    o.rows.forEach(function(r){var a=num(r.kecil),c=num(r.besar),e=num(r.tendik),d=num(r.sampel);k+=a;b+=c;td+=e;s+=d;
+      h+='<tr><td>'+(esc(r.sekolah)||"(belum diisi)")+'</td><td>'+show(a)+'</td><td>'+show(c)+'</td><td>'+show(e)+'</td><td>'+show(d)+'</td><td>'+show(a+c+e+d)+'</td></tr>'});
+    if(o.rows.length>1)h+='<tr class="sb"><td>Subtotal</td><td>'+k+'</td><td>'+b+'</td><td>'+td+'</td><td>'+s+'</td><td>'+(k+b+td+s)+'</td></tr>';
   });
   var T=tot();
-  return h+'</tbody><tfoot><tr><td>JUMLAH KESELURUHAN</td><td>'+T.k+'</td><td>'+T.b+'</td><td>'+T.s+'</td><td>'+T.t+'</td></tr></tfoot></table>';
+  return h+'</tbody><tfoot><tr><td>JUMLAH KESELURUHAN</td><td>'+T.k+'</td><td>'+T.b+'</td><td>'+T.d+'</td><td>'+T.s+'</td><td>'+T.t+'</td></tr></tfoot></table>';
 }
 function renderRekap(){var T=tot();
   document.getElementById("rekap").innerHTML='<div class="hd"><b>Rekap jumlah keseluruhan</b><button id="prk" class="pri">Cetak rekap</button></div>'+
-  '<div class="rs"><div><small>BAST</small><b>'+st.bast.length+'</b></div><div><small>Sekolah</small><b>'+T.n+'</b></div><div><small>Kecil</small><b>'+T.k+'</b></div><div><small>Besar</small><b>'+T.b+'</b></div><div><small>Sampel</small><b>'+T.s+'</b></div><div><small>Total porsi</small><b>'+T.t+'</b></div></div><div class="tw">'+rekapTbl()+'</div>';
+  '<div class="rs"><div><small>BAST</small><b>'+st.bast.length+'</b></div><div><small>Sekolah</small><b>'+T.n+'</b></div><div><small>Kecil</small><b>'+T.k+'</b></div><div><small>Besar</small><b>'+T.b+'</b></div><div><small>Tendik</small><b>'+T.d+'</b></div><div><small>Sampel</small><b>'+T.s+'</b></div><div><small>Total porsi</small><b>'+T.t+'</b></div></div><div class="tw">'+rekapTbl()+'</div>';
   document.getElementById("prk").onclick=printRekap}
 function printRekap(){syncTgl();refresh(false);var d=dt(),tg=d?HARI[d.getDay()]+", "+d.getDate()+" "+BLN[d.getMonth()]+" "+d.getFullYear():"...............";
   document.getElementById("print").innerHTML='<section class="page rk">'+'<div class="kop"><img src="'+LOGO+'" alt=""><div><b>SATUAN PELAYANAN PEMENUHAN GIZI (SPPG)</b><b>YAYASAN ABHINAYA DAKARA INDONESIA</b><i>Jl. Pahlawan 69 RT.003 RW.004 Kel. Karangduak, Kecamatan Kota Sumenep,<br>Kabupaten Sumenep Provinsi Jawa Timur</i></div></div>'+'<div class="jd">REKAPITULASI JUMLAH PORSI<br>PAKET MAKANAN PROGRAM MAKAN BERGIZI GRATIS<br>'+tg+'</div>'+rekapTbl()+'</section>';
@@ -197,8 +197,8 @@ function renderPrint(){
   var d=dt(),tg=d?HARI[d.getDay()]+" Tanggal "+d.getDate()+" "+BLN[d.getMonth()]+" "+d.getFullYear():"...............";
   var drv=st.drv?esc(st.drv):"............................................";
   var out=st.bast.map(function(b,i){if(b.print===false)return "";
-    var rows=b.rows.map(function(r,j){var k=num(r.kecil),s=num(r.besar),m=num(r.sampel);
-      return "<tr><td>"+(j+1)+"</td><td>"+esc(r.sekolah)+"</td><td>"+show(k)+"</td><td>"+show(s)+"</td><td>"+show(m)+"</td><td>"+show(k+s+m)+"</td><td></td></tr>"}).join("");
+    var rows=b.rows.map(function(r,j){var k=num(r.kecil),s=num(r.besar),m=num(r.sampel),e=num(r.tendik);
+      return "<tr><td>"+(j+1)+"</td><td>"+esc(r.sekolah)+"</td><td>"+show(k)+"</td><td>"+show(s)+"</td><td>"+show(e)+"</td><td>"+show(m)+"</td><td>"+show(k+s+m+e)+"</td><td></td></tr>"}).join("");
     return '<section class="page"><div class="kop"><img src="'+LOGO+'" alt=""><div><b>SATUAN PELAYANAN PEMENUHAN GIZI (SPPG)</b><b>YAYASAN ABHINAYA DAKARA INDONESIA</b><i>Jl. Pahlawan 69 RT.003 RW.004 Kel. Karangduak, Kecamatan Kota Sumenep,<br>Kabupaten Sumenep Provinsi Jawa Timur</i></div></div>'+
     '<div class="jd">BERITA ACARA SERAH TERIMA (BAST)<br>PAKET MAKANAN PROGRAM MAKAN BERGIZI GRATIS<br><u>No. '+nomor(i)+'</u></div>'+
     '<p>Yang bertanda tangan di bawah ini :</p><p><b>PIHAK PERTAMA</b></p>'+
@@ -207,7 +207,7 @@ function renderPrint(){
     '<p class="f"><span>Kategori/ Sasaran</span><span>: Porsi Besar dan Porsi Kecil</span></p>'+
     '<p class="f"><span>Nama Penerima</span><span>: '+(b.penerima?esc(b.penerima):"............................................")+'</span></p>'+
     '<p class="isi">Pada hari ini, '+tg+' <b>PIHAK KEDUA</b> telah menerima Paket Makanan Bergizi Gratis dari <b>PIHAK PERTAMA,</b> Yang didistribusikan dalam keadaan baik dan akan dikembalikan dalam baik oleh <b>PIHAK KEDUA</b> kepada <b>PIHAK PERTAMA</b> setelah dikonsumsi oleh penerima manfaat. Adapun rincian pengiriman Paket Makanan Bergizi Gratis sebagai berikut :</p>'+
-    '<table><tr><th rowspan="2" style="width:9%">No.</th><th rowspan="2">Sekolah</th><th colspan="4">Jumlah Porsi</th><th rowspan="2" style="width:17%">Waktu Penyerahan</th></tr><tr><th style="width:10%">Kecil</th><th style="width:10%">Besar</th><th style="width:10%">Sampel</th><th style="width:10%">Total</th></tr>'+rows+'</table>'+
+    '<table><tr><th rowspan="3" style="width:8%">No.</th><th rowspan="3">Sekolah</th><th colspan="5">Jumlah Porsi</th><th rowspan="3" style="width:16%">Waktu Penyerahan</th></tr><tr><th colspan="2">Siswa</th><th rowspan="2" style="width:9%">Tendik</th><th rowspan="2" style="width:9%">Sampel</th><th rowspan="2" style="width:9%">Total</th></tr><tr><th style="width:9%">Kecil</th><th style="width:9%">Besar</th></tr>'+rows+'</table>'+
     '<div class="ttd"><div>Diserahkan Oleh,<br><b>PIHAK PERTAMA</b><div class="gap"></div><b>.....................................</b><br>Driver</div>'+
     '<div>Diterima Oleh,<br><b>PIHAK KEDUA</b><div class="gap"></div><b>.....................................</b><br>PIC</div></div></section>';
   }).join("");
@@ -221,7 +221,7 @@ list.addEventListener("input",function(e){
   var t=e.target;if(t.dataset.p!=null){st.bast[t.dataset.p].print=t.checked;save();renderPrint();cnt();return}var b=t.dataset.b;if(b==null)return;
   var o=st.bast[b],k=t.dataset.k;
   if(t.dataset.r!=null){var r=o.rows[t.dataset.r];r[k]=t.value;
-    var el=document.getElementById("t"+b+"_"+t.dataset.r);if(el)el.textContent=num(r.kecil)+num(r.besar)+num(r.sampel)}
+    var el=document.getElementById("t"+b+"_"+t.dataset.r);if(el)el.textContent=num(r.kecil)+num(r.besar)+num(r.tendik)+num(r.sampel)}
   else o[k]=t.value;
   save();renderPrint();renderRekap();
 });
@@ -261,7 +261,7 @@ function cloudSave(){
 function applyCloud(d,keep){
   if(!d||!d.bast)return;
   st.bast=d.bast;
-  if(!keep)st.bast.forEach(function(b){b.print=true;b.rows.forEach(function(r){r.kecil="";r.besar="";r.sampel=""})});
+  if(!keep)st.bast.forEach(function(b){b.print=true;b.rows.forEach(function(r){r.kecil="";r.besar="";r.tendik="";r.sampel=""})});
   if(d.drv!=null)st.drv=d.drv;if(d.unit)st.unit=d.unit;
   st.st=keep&&d.st?d.st:"";
   document.getElementById("st").value=st.st;document.getElementById("drv").value=st.drv||"";document.getElementById("unit").value=st.unit||"";
